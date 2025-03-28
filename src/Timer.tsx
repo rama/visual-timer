@@ -2,15 +2,21 @@ import { useState, useEffect } from "react";
 
 export default function Timer() {
 	const [duration, setDuration] = useState(0);
+	const [startTime, setStartTime] = useState(0);
 
-	useEffect(() => {
-		if (duration > 0) {
-			const intervalId = setInterval(() => {
-				setDuration((d) => d - 1);
-			}, 1000);
-			return () => clearInterval(intervalId);
+	function startTimer(e: React.ChangeEvent<HTMLInputElement>) {
+		setDuration(parseInt(e.target.value));
+		setStartTime(performance.now());
+		const frameId = requestAnimationFrame(onFrame);
+	}
+
+	function onFrame(now: DOMHighResTimeStamp) {
+		const timeElapsed = Math.floor((now - startTime) / 1000);
+		if (timeElapsed <= duration) {
+			setDuration(duration - timeElapsed);
+			const frameId = requestAnimationFrame(onFrame);
 		}
-	}, [duration]);
+	}
 
 	return (
 		<>
@@ -18,7 +24,7 @@ export default function Timer() {
 				name="duration"
 				type="number"
 				value={duration}
-				onChange={(e) => setDuration(parseInt(e.target.value))}
+				onChange={startTimer}
 			/>
 		</>
 	);
