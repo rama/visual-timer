@@ -1,10 +1,11 @@
-import './App.css';
+import "./App.css";
+import Timer from "./Timer";
 
 export function App() {
-  return (
-    <>
-      <h1>Parcel React App</h1>
-      <p>Edit <code>src/App.tsx</code> to get started!</p>
-    </>
-  );
+	return (
+		<>
+			<h1>Visual Timer</h1>
+			<Timer />
+		</>
+	);
 }
