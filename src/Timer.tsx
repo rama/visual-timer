@@ -1,11 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Timer() {
 	const [duration, setDuration] = useState(0);
 
-	function startTimer() {
-		alert("Timer started");
-	}
+	useEffect(() => {
+		if (duration > 0) {
+			const intervalId = setInterval(() => {
+				setDuration((d) => d - 1);
+			}, 1000);
+			return () => clearInterval(intervalId);
+		}
+	}, [duration]);
 
 	return (
 		<>
@@ -15,7 +20,6 @@ export default function Timer() {
 				value={duration}
 				onChange={(e) => setDuration(parseInt(e.target.value))}
 			/>
-			<button onClick={startTimer}>Start</button>
 		</>
 	);
 }
