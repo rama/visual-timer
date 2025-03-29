@@ -1,21 +1,30 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export default function Timer() {
 	const [duration, setDuration] = useState(0);
 	const startTime = useRef(NaN);
+	const animationFrameId = useRef(NaN);
 
 	function startTimer() {
 		startTime.current = performance.now();
-		requestAnimationFrame(onFrame);
+		animationFrameId.current = requestAnimationFrame(onFrame);
 	}
 
 	function onFrame(now: DOMHighResTimeStamp) {
 		const timeElapsed = Math.floor((now - startTime.current) / 1000);
 		if (timeElapsed <= duration) {
 			setDuration(duration - timeElapsed);
-			requestAnimationFrame(onFrame);
+			animationFrameId.current = requestAnimationFrame(onFrame);
 		}
 	}
+
+	useEffect(() => {
+		return () => {
+			if (animationFrameId.current) {
+				cancelAnimationFrame(animationFrameId.current);
+			}
+		};
+	}, []);
 
 	return (
 		<>
